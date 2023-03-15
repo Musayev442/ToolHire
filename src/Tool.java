@@ -1,3 +1,5 @@
+import java.util.Scanner;
+
 public class Tool {
     private String toolName;
     private String itemCode;
@@ -6,14 +8,6 @@ public class Tool {
     private int cost;
     private int weight;
 
-    public Tool(String toolName, String itemCode, int timesBorrowed, boolean onLoan, int cost, int weight) {
-        this.toolName = toolName;
-        this.itemCode = itemCode;
-        this.timesBorrowed = timesBorrowed;
-        this.onLoan = onLoan;
-        this.cost = cost;
-        this.weight = weight;
-    }
 
     // printDetails method
     public void printDetails() {
@@ -24,4 +18,16 @@ public class Tool {
         System.out.println("Cost: " + cost);
         System.out.println("Weight: " + weight);
     }
+
+    public void readData(Scanner scanner) {
+        scanner.useDelimiter(",");
+
+        this.toolName = scanner.next();
+        this.itemCode = scanner.next();
+        this.timesBorrowed = Integer.parseInt(scanner.next());
+        this.onLoan = Boolean.parseBoolean(scanner.next());
+        this.cost = Integer.parseInt(scanner.next());
+        this.weight = Integer.parseInt(scanner.next());
+    }
+
 }

@@ -49,16 +49,8 @@ public class Shop {
                     if (!lineOfText.trim().isEmpty() && !lineOfText.startsWith("//")) {
                         Scanner lineScanner = new Scanner(lineOfText);
 
-                        lineScanner.useDelimiter(",");
-
-                        String toolName = lineScanner.next();
-                        String itemCode = lineScanner.next();
-                        int timesBorrowed = Integer.parseInt(lineScanner.next());
-                        boolean onLoan = Boolean.parseBoolean(lineScanner.next());
-                        int cost = Integer.parseInt(lineScanner.next());
-                        int weight = Integer.parseInt(lineScanner.next());
-
-                        Tool tool = new Tool(toolName, itemCode, timesBorrowed, onLoan, cost, weight);
+                        Tool tool = new Tool();
+                        tool.readData(lineScanner);
                         storeTool(tool);
 
                         lineScanner.close(); // close scanner for this line
