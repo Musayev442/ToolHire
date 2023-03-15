@@ -29,7 +29,7 @@ public class Shop {
 
     public void readToolData() {
         // create a FileDialog to select the input file
-        FileDialog dialog = new FileDialog((Frame)null, "Select File to Open");
+        FileDialog dialog = new FileDialog((Frame) null, "Select File to Open");
         dialog.setMode(FileDialog.LOAD);
         dialog.setDirectory("C:\\Users\\AsusPC\\Documents\\JavaProjects\\Tool Hire\\datas\\tool_data_1.txt"); // set directory to your desired path
         dialog.setVisible(true);
@@ -46,25 +46,25 @@ public class Shop {
                 while (fileScanner.hasNextLine()) {
                     String lineOfText = fileScanner.nextLine().trim();
 
-                    if (lineOfText.trim().isEmpty() || lineOfText.startsWith("//")) {
-                        continue;  // skip comments and empty lines
+                    if (!lineOfText.trim().isEmpty() || !lineOfText.startsWith("//")) {
+                        Scanner lineScanner = new Scanner(lineOfText);
+
+                        lineScanner.useDelimiter(",");
+
+                        String toolName = lineScanner.next();
+                        String itemCode = lineScanner.next();
+                        int timesBorrowed = Integer.parseInt(lineScanner.next());
+                        boolean onLoan = Boolean.parseBoolean(lineScanner.next());
+                        int cost = Integer.parseInt(lineScanner.next());
+                        int weight = Integer.parseInt(lineScanner.next());
+
+                        Tool tool = new Tool(toolName, itemCode, timesBorrowed, onLoan, cost, weight);
+                        storeTool(tool);
+
+                        lineScanner.close(); // close scanner for this line
                     }
 
-                    Scanner lineScanner = new Scanner(lineOfText);
-                    lineScanner.useDelimiter(",");
 
-
-                    String toolName = lineScanner.next();
-                    String itemCode = lineScanner.next();
-                    int timesBorrowed = Integer.parseInt(lineScanner.next());
-                    boolean onLoan = Boolean.parseBoolean(lineScanner.next());
-                    int cost = Integer.parseInt(lineScanner.next());
-                    int weight = Integer.parseInt(lineScanner.next());
-
-                    Tool tool = new Tool(toolName, itemCode, timesBorrowed, onLoan, cost, weight);
-                    storeTool(tool);
-
-                    lineScanner.close(); // close scanner for this line
                 }
 
                 fileScanner.close(); // close scanner for file
