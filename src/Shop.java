@@ -13,8 +13,17 @@ public class Shop {
 
     // print the details of all tools in toolList
     public void printAllTools() {
+        int toolCount = 1;
+
+        System.out.println("--------- Shop Tools ---------");
+
         for (Tool tool : toolList) {
+            System.out.println("Tool: " + toolCount);
+
             tool.printDetails();
+
+            System.out.println("\n");
+            toolCount++;
         }
     }
 
@@ -29,7 +38,6 @@ public class Shop {
                 }
 
                 String[] data = line.trim().split(",");
-                System.out.println(data[4]);
                 String toolName = data[0];
                 String itemCode = data[1];
                 int timesBorrowed = Integer.parseInt(data[2]);
