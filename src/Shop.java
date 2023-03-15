@@ -46,7 +46,7 @@ public class Shop {
                 while (fileScanner.hasNextLine()) {
                     String lineOfText = fileScanner.nextLine().trim();
 
-                    if (!lineOfText.trim().isEmpty() || !lineOfText.startsWith("//")) {
+                    if (!lineOfText.trim().isEmpty() && !lineOfText.startsWith("//")) {
                         Scanner lineScanner = new Scanner(lineOfText);
 
                         lineScanner.useDelimiter(",");
