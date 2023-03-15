@@ -3,10 +3,10 @@ public class Tool {
     private String itemCode;
     private int timesBorrowed;
     private boolean onLoan;
-    private double cost;
-    private double weight;
+    private int cost;
+    private int weight;
 
-    public Tool(String toolName, String itemCode, int timesBorrowed, boolean onLoan, double cost, double weight) {
+    public Tool(String toolName, String itemCode, int timesBorrowed, boolean onLoan, int cost, int weight) {
         this.toolName = toolName;
         this.itemCode = itemCode;
         this.timesBorrowed = timesBorrowed;
