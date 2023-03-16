@@ -46,11 +46,13 @@ public class Shop {
                 while (fileScanner.hasNextLine()) {
                     String lineOfText = fileScanner.nextLine().trim();
 
-                    if (!lineOfText.trim().isEmpty() && !lineOfText.startsWith("//")) {
+                    if (!lineOfText.trim().isEmpty() && !lineOfText.startsWith("//")&& !lineOfText.startsWith("[")) {
                         Scanner lineScanner = new Scanner(lineOfText);
 
                         Tool tool = new Tool();
+
                         tool.readData(lineScanner);
+
                         storeTool(tool);
 
                         lineScanner.close(); // close scanner for this line
