@@ -35,30 +35,41 @@ public class Shop {
         dialog.setVisible(true);
 
         String fileName = dialog.getFile();
+
         if (fileName != null) {
-            System.out.println("Selected file: " + fileName);
+
             File file = new File(dialog.getDirectory(), fileName);
+            String typeOfData="";
 
             try {
                 Scanner fileScanner = new Scanner(file);
 
                 // read each line of the file and print it to the console
-                while (fileScanner.hasNextLine()) {
-                    String lineOfText = fileScanner.nextLine().trim();
+                while (fileScanner.hasNextLine()==true) {
 
-                    if (!lineOfText.trim().isEmpty() && !lineOfText.startsWith("//")&& !lineOfText.startsWith("[")) {
-                        Scanner lineScanner = new Scanner(lineOfText);
+                    String lineOfText = (fileScanner.nextLine()).trim();
 
-                        Tool tool = new Tool();
+                    if (lineOfText.startsWith("//") || lineOfText.isEmpty()) {
+                        continue; // ignore comments and empty lines
+                    } else if (lineOfText.startsWith("[")) {
+                        typeOfData = lineOfText; // set type of data based on flag
+                        System.out.println(typeOfData);
+                    } else {
 
-                        tool.readData(lineScanner);
+                        Scanner lineScanner = new Scanner(lineOfText.replaceAll("\\s+", ""));
 
-                        storeTool(tool);
+                        if (typeOfData.equals("[ElectricTool data]")) {
+                            ElectricTool electricTool = new ElectricTool();
+                            electricTool.readData(lineScanner);
+                            toolList.add(electricTool);
+                        } else if (typeOfData.equals("[HandTool data]")) {
+                            Handtool handtool=new Handtool();
+                            handtool.readData(lineScanner);
+                            toolList.add(handtool);
+                        }
 
                         lineScanner.close(); // close scanner for this line
                     }
-
-
                 }
 
                 fileScanner.close(); // close scanner for file
@@ -68,5 +79,6 @@ public class Shop {
         }
         printAllTools(); // print all tools for debugging purposes
 
+        System.exit(0);
     }
 }
