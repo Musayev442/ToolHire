@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Shop {
-    private final ArrayList<Tool> toolList = new ArrayList<>();
+    private final ArrayList<ShopItem> shopItemList = new ArrayList<>();
 
     // print the details of all tools in toolList
     public void printAllTools() {
@@ -12,10 +12,10 @@ public class Shop {
 
         System.out.println("--------- Shop Tools ---------");
 
-        for (Tool tool : toolList) {
+        for (ShopItem item : shopItemList) {
             System.out.println("Tool: " + toolCount);
 
-            tool.printDetails();
+            item.printDetails();
 
             System.out.println("\n");
             toolCount++;
@@ -53,16 +53,24 @@ public class Shop {
                         System.out.println(typeOfData);
                     } else {
 
-                        Scanner lineScanner = new Scanner(lineOfText.replaceAll("\\s+", ""));
+                        Scanner lineScanner = new Scanner(lineOfText);
 
-                        if (typeOfData.equals("[ElectricTool data]")) {
+                        if (typeOfData.equalsIgnoreCase("[ElectricTool data]")) {
                             ElectricTool electricTool = new ElectricTool();
                             electricTool.readData(lineScanner);
-                            toolList.add(electricTool);
+                            shopItemList.add(electricTool);
                         } else if (typeOfData.equals("[HandTool data]")) {
                             Handtool handtool=new Handtool();
                             handtool.readData(lineScanner);
-                            toolList.add(handtool);
+                            shopItemList.add(handtool);
+                        }else if (typeOfData.equals("[Perishable data]")){
+                            Perishable perishable=new Perishable();
+                            perishable.readData(lineScanner);
+                            shopItemList.add(perishable);
+                        }else if (typeOfData.equals("[Workwear data]")){
+                            Workwear workwear =new Workwear();
+                            workwear.readData(lineScanner);
+                            shopItemList.add(workwear);
                         }
 
                         lineScanner.close(); // close scanner for this line
