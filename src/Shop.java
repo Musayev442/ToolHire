@@ -8,17 +8,17 @@ public class Shop {
 
     // print the details of all tools in toolList
     public void printAllTools() {
-        int toolCount = 1;
+        int itemCount = 1;
 
         System.out.println("--------- Shop Tools ---------");
 
         for (ShopItem item : shopItemList) {
-            System.out.println("Tool: " + toolCount);
+            System.out.println("Tool: " + itemCount);
 
             item.printDetails();
 
             System.out.println("\n");
-            toolCount++;
+            itemCount++;
         }
     }
 
@@ -50,7 +50,6 @@ public class Shop {
 
                     if (lineOfText.startsWith("[")) {
                         typeOfData = lineOfText; // set type of data based on flag
-                        System.out.println(typeOfData);
                     } else {
 
                         Scanner lineScanner = new Scanner(lineOfText);
