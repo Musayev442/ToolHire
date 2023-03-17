@@ -4,12 +4,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Shop {
-    private ArrayList<Tool> toolList = new ArrayList<Tool>();
-
-    // store a tool in the toolList
-    public void storeTool(Tool tool) {
-        toolList.add(tool);
-    }
+    private final ArrayList<Tool> toolList = new ArrayList<>();
 
     // print the details of all tools in toolList
     public void printAllTools() {
@@ -45,13 +40,15 @@ public class Shop {
                 Scanner fileScanner = new Scanner(file);
 
                 // read each line of the file and print it to the console
-                while (fileScanner.hasNextLine()==true) {
+                while (fileScanner.hasNextLine()) {
 
                     String lineOfText = (fileScanner.nextLine()).trim();
 
                     if (lineOfText.startsWith("//") || lineOfText.isEmpty()) {
                         continue; // ignore comments and empty lines
-                    } else if (lineOfText.startsWith("[")) {
+                    }
+
+                    if (lineOfText.startsWith("[")) {
                         typeOfData = lineOfText; // set type of data based on flag
                         System.out.println(typeOfData);
                     } else {
