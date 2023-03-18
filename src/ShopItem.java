@@ -5,6 +5,10 @@ public class ShopItem {
     protected String itemCode;
     protected int cost;
 
+    public String getItemCode() {
+        return itemCode;
+    }
+
     public void printDetails() {
         System.out.println("Tool name: " + itemName);
         System.out.println("Code: " + itemCode);
