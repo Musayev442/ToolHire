@@ -34,13 +34,15 @@ public class Customer {
         this.customerID = customerID;
     }
 
+    // Method to print customer details
     public void printDetails() {
         System.out.println("Customer ID: " + customerID);
         System.out.println("Surname: " + surname);
         System.out.println("First name: " + firstName);
-        System.out.println("OtherInitials: " + otherInitials);
-        System.out.println("Gender: " + title );
+        System.out.println("Other initials: " + otherInitials);
+        System.out.println("Title: " + title);
     }
+
 
     public void readData(Scanner scanner) {
         scanner.useDelimiter("\\s*,\\s*|\\s+(?=[,])");
@@ -58,6 +60,7 @@ public class Customer {
         writer.println("First name: " + firstName);
         writer.println("OtherInitials: " + otherInitials);
         writer.println("Gender: " + title );
+        writer.println();
     }
 
 }

@@ -1,18 +1,23 @@
 import java.awt.*;
-import java.io.*;
-import java.util.*;
-import java.util.List;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Random;
+import java.util.Scanner;
 
 public class Shop {
     //    private ArrayList<ShopItem> shopItemList;
 //    private ArrayList<Customer> customerList;
 //    private List<ShopItem> itemsList;
 //    private List<Customer> customerList;
-    private HashSet<String> customerIDs;
+    private HashSet<String> customerIDsSet;
     private HashMap<String, Customer> customerMap;
     private HashMap<String, ShopItem> itemsMap;
-
+    private HashMap<String, ShopItemReservation> itemReservationMap;
     private Random randomGenerator;
+    private int lastReservationNo = 0;
 
     public Shop() {
         // create new ArrayList objects for customerList and itemsList
@@ -20,14 +25,15 @@ public class Shop {
 //        itemsList = new ArrayList<ShopItem>();
 
         // create new HashMap objects for customerMap and itemsMap
-        customerMap = new HashMap<String, Customer>();
-        itemsMap = new HashMap<String, ShopItem>();
+        this.customerMap = new HashMap<String, Customer>();
+        this.itemsMap = new HashMap<String, ShopItem>();
+        this.itemReservationMap = new HashMap<String, ShopItemReservation>();
 
-        this.customerIDs = new HashSet<String>();
+        this.customerIDsSet = new HashSet<String>();
         this.randomGenerator = new Random();
     }
 
-    //Get item by itemCode
+    //Get Item by itemCode
     public ShopItem getItem(String itemCode) {
         return itemsMap.get(itemCode);
     }
@@ -35,6 +41,11 @@ public class Shop {
     // Get Customer by customerId
     public Customer getCustomer(String customerId) {
         return customerMap.get(customerId);
+    }
+
+    // Get ShopItemReservation by reservationNo
+    public ShopItemReservation getItemReservation(String reservationNo) {
+        return itemReservationMap.get(reservationNo);
     }
 
     // Method to store a new item
@@ -48,12 +59,7 @@ public class Shop {
         // Allocate a unique customer ID
         if (customer.getCustomerID().equals("unknown")) {
 
-            String newId;
-            do {
-                newId = generateCustomerID("AB-", 6);
-
-                // Check HashSet contains new ID
-            } while (!customerIDs.add(newId));
+            String newId = generateCustomerID("AB-", 6);
 
             customer.setCustomerID(newId);
         }
@@ -62,6 +68,11 @@ public class Shop {
         // Add the customer to the customerList
         //this.customerList.add(customer);
         this.customerMap.put(customer.getCustomerID(), customer);
+    }
+
+    // Method to store a new ShopItemReservation
+    public void storeItemReservation(ShopItemReservation itemReservation) {
+        itemReservationMap.put(itemReservation.getReservationNo(), itemReservation);
     }
 
     // Method to print details of all tools
@@ -115,6 +126,17 @@ public class Shop {
 
             System.out.println("\n");
             customerCount++;
+        }
+    }
+
+    public void printItemReservations() {
+        System.out.println("Reservations for item: ");
+
+        for (HashMap.Entry<String, ShopItemReservation> reservationEntry : this.itemReservationMap.entrySet()) {
+
+            reservationEntry.getValue().printDetails();
+
+            System.out.println("\n");
         }
     }
 
@@ -177,10 +199,15 @@ public class Shop {
             } catch (FileNotFoundException e) {
                 System.out.println("File not found: " + e.getMessage());
             }
+        } else {
+            System.exit(0);
         }
+
         printAllTools(); // print all tools for debugging purposes
 
-        System.exit(0);
+        System.out.println("Press Enter button to continue!");
+        Scanner scan = new Scanner(System.in);
+        scan.nextLine();
     }
 
     // Method to read customer data from a file
@@ -216,14 +243,58 @@ public class Shop {
 
                     customer.readData(lineScanner);
 
-                    // Off course we can use this mehod but I have one question. Why we declared readData() method in Customer class?
+                    // Off course, we can use this mehod, but I have one question. Why we declared readData() method in Customer class?
                     // Why we have two constructors in Customer class, where we should use them?
                     //scanner.useDelimiter("\\s*,\\s*|\\s+(?=[,])");
                     //Customer customer = new Customer(scanner.next(), scanner.next(), scanner.next(), scanner.next());
 
                     storeCustomer(customer);
 
-                    //writeCustomerData();
+                    lineScanner.close(); // close scanner for this line
+                }
+
+                fileScanner.close(); // close scanner for file
+            } catch (FileNotFoundException e) {
+                System.out.println("File not found: " + e.getMessage());
+            }
+        } else {
+
+            System.exit(0);
+        }
+        writeCustomerData();
+        printAllCustomers(); // print all customers for debugging purposes
+
+    }
+
+    public void readItemReservationData() {
+        // create a FileDialog to select the input file
+        FileDialog dialog = new FileDialog((Frame) null, "Select Reservation Data File to Open");
+        dialog.setMode(FileDialog.LOAD);
+        dialog.setDirectory("JavaProjects\\Tool Hire\\datas\\tool_data_1.txt"); // set directory to your desired path
+        dialog.setVisible(true);
+
+        String fileName = dialog.getFile();
+
+        if (fileName != null) {
+
+            File file = new File(dialog.getDirectory(), fileName);
+            String typeOfData = "";
+
+            try {
+                Scanner fileScanner = new Scanner(file);
+
+                // read each line of the file and print it to the console
+                while (fileScanner.hasNextLine()) {
+
+                    String lineOfText = (fileScanner.nextLine()).trim();
+
+                    if (lineOfText.startsWith("//") || lineOfText.isEmpty()) {
+                        continue; // ignore comments and empty lines
+                    }
+
+                    Scanner lineScanner = new Scanner(lineOfText);
+
+                    // Why we use this method and where we use this method (readItemReservationData(); method)?
 
                     lineScanner.close(); // close scanner for this line
                 }
@@ -233,7 +304,7 @@ public class Shop {
                 System.out.println("File not found: " + e.getMessage());
             }
         }
-        printAllCustomers(); // print all customers for debugging purposes
+        printItemReservations(); // print all customers for debugging purposes
 
         System.exit(0);
     }
@@ -254,19 +325,78 @@ public class Shop {
         }
     }
 
+    // Method to write Reservation data to a file
+    public void writeItemReservationData() {
+        String filename = "new_item_reservation_data";
+        try {
+            PrintWriter writer = new PrintWriter(filename);
+
+            for (HashMap.Entry<String, ShopItemReservation> reservationEntry : this.itemReservationMap.entrySet()) {
+                reservationEntry.getValue().writeData(writer);
+            }
+
+            writer.close();
+        } catch (FileNotFoundException e) {
+            System.out.println("Error: Could not create file " + filename);
+        }
+    }
+
     // Method to generate a unique customer ID with the given prefix and number of digits
     public String generateCustomerID(String prefix, int numDigits) {
         // Generate a random number with the given number of digits
-
         int min = (int) Math.pow(10, numDigits - 1);
         int max = (int) Math.pow(10, numDigits) - 1;
-        int randomNum = randomGenerator.nextInt(max - min + 1) + min;
 
-        // Combine the prefix and random number to create the customer ID
-        String customerID = prefix + randomNum;
+        String customerID;
+        do {
+            int randomNum = randomGenerator.nextInt(max - min + 1) + min;
+
+            // Combine the prefix and random number to create the customer ID
+            customerID = prefix + randomNum;
+
+            // Check HashSet contains new ID
+        } while (!customerIDsSet.add(customerID));
 
         // If the ID is not already in use, return it
         return customerID;
     }
+
+    public String generateReservationNo() {
+        lastReservationNo++;
+        String reservationNo = String.format("%06d", lastReservationNo);
+        return reservationNo;
+    }
+
+    public boolean makeItemReservation(String customerID, String itemID, String startDate, int noOfDays) {
+        // Check if customerID, itemID, startDate, and noOfDays are valid
+        if (customerID == null || customerID.isEmpty()) {
+            System.out.println("Invalid customer ID.");
+            return false;
+        }
+        if (itemID == null || itemID.isEmpty()) {
+            System.out.println("Invalid item ID.");
+            return false;
+        }
+        if (startDate == null || startDate.isEmpty()) {
+            System.out.println("Invalid start date.");
+            return false;
+        }
+        if (noOfDays <= 0) {
+            System.out.println("Invalid number of days.");
+            return false;
+        }
+
+        // Generate a reservation number
+        String reservationNo = generateReservationNo();
+
+        // Create a ShopItemReservation object
+        ShopItemReservation reservation = new ShopItemReservation(reservationNo, customerID, itemID, startDate, noOfDays);
+
+        // Add the reservation to the list of reservations
+        storeItemReservation(reservation);
+
+        return true;
+    }
+
 
 }
